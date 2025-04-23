@@ -1,0 +1,10 @@
+
+origins= {{origins}}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials={{credentials}},
+    allow_methods={{methods}},
+    allow_headers={{headers}},
+)

@@ -9,15 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 {% if cors %}
-origins= {{origins}}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials={{credentials}},
-    allow_methods={{methods}},
-    allow_headers={{headers}},
-)
+{{cors}}
 {% endif %}
 
 {% for route in routes %}
