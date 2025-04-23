@@ -1,0 +1,10 @@
+from fastapi import FastAPI
+{% for import in imports %}
+{{ import}}
+{% endfor %}
+
+app = FastAPI()
+
+{% for route in routes %}
+{{ route }}
+{% endfor %}

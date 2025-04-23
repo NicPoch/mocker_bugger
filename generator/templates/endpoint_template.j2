@@ -1,0 +1,20 @@
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+{% if status_code < 200 or status_code >= 300 %}
+from fastapi import HTTPException
+{% endif %}
+{% if delay %}
+import time
+{% endif %}
+router = APIRouter()
+
+@router.{{ method|lower }}("{{ path }}")
+async def {{ function_name }}():
+    {% if delay %}
+    time.sleep({{delay}})
+    {% endif %}
+    {% if status_code < 200 or status_code >= 300 %}
+    raise HTTPException(status_code={{ status_code }}, detail={{ response_body }})
+    {% else %}
+    return JSONResponse(content={{ response_body }}, status_code={{ status_code }})
+    {% endif %}
