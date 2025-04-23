@@ -1,5 +1,5 @@
 from generator.parser import load_config
-from generator.code_writer import write_endpoints
+from generator.code_writer import write_application
 import os
 
 if __name__ == "__main__":
@@ -15,5 +15,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"An error occurred: {e}")
     config = load_config(f"templates/{template_name}.yaml")
-    write_endpoints(config,output_dir=directory)
+    write_application(config,output_dir=directory)
     print("✅ API code generated in ./generated_api/")

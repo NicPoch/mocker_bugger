@@ -16,3 +16,17 @@ endpoints:
     response:
       status_code: 400
       body: {error: "Some error"}
+app:
+  cors:
+    origins: ["http://localhost","http://localhost:8080"]
+    credentials: True
+    methods: ["*"]
+    headers: ["*"]
+  metadata:
+    title: "Example Api"
+    description: "Example Description"
+    summary: "Example Summary"
+    version: "1"
+    
+
+
