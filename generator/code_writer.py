@@ -7,29 +7,46 @@ def sanitize_path(path):
     return path.strip("/").replace("/", "_").replace("-", "_")
 
 def render_enpoint(config, output_dir):
+    print("Rendering domain endpoints")
     os.makedirs(f"{output_dir}/endpoints", exist_ok=True)
     
     imports = []
     includes = []
+    for domain in config["domains"]:
+        print(f"Rendering domain: {domain['name']}")
+        endpoints = []
+        extra_imports = {
+            "delay":False,
+            "errors":False
+        }
+        filename = sanitize_path(domain["name"]) or "root"
+        prefix = f"/{domain['name']}"
+        for ep in domain["endpoints"]:
+            print(f"\t{ep['path']}")
+            endpoint_template = env.get_template("endpoint_template.j2")
+            function_name = f"{ep['method'].lower()}_{filename}" + ("" if ep["path"]=="/" else ep["path"][1:])
+            extra_imports["delay"]= extra_imports["delay"] or "delay" in ep
+            extra_imports["errors"]=extra_imports["errors"] or ep["response"]["status_code"]<200 or ep["response"]["status_code"]>=300
+            endpoint_render = endpoint_template.render(
+                method=ep["method"],
+                function_name=function_name,
+                delay=ep.get("delay"),
+                status_code=ep["response"]["status_code"],
+                response_body=ep["response"]["body"],
+                path=prefix+ep["path"]
+            )
+            endpoints.append(endpoint_render)
 
-    for ep in config["endpoints"]:
-        template = env.get_template("endpoint_template.j2")
-        filename = sanitize_path(ep["path"]) or "root"
-        function_name = f"{ep['method'].lower()}_{filename}"
-
-        rendered = template.render(
-            path=ep["path"],
-            method=ep["method"],
-            response_body=ep["response"]["body"],
-            status_code=ep["response"]["status_code"],
-            delay=ep.get("delay",None),
-            function_name=function_name
+        domain_template = env.get_template("domain_template.j2")
+        rendered = domain_template.render(
+            errors = extra_imports["errors"],
+            delay=extra_imports["delay"],
+            endpoints=endpoints
         )
 
         filepath = f"{output_dir}/endpoints/{filename}.py"
         with open(filepath, "w") as f:
             f.write(rendered)
-
         imports.append(f"from endpoints import {filename}")
         includes.append(f"app.include_router({filename}.router)")
     return imports, includes
