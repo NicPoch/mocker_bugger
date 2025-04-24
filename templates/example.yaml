@@ -1,21 +1,30 @@
-endpoints:
-  - path: /users
-    method: GET
-    response:
-      status_code: 200
-      body:
-        users: [{ id: 1, name: "Alice" }]
-  - path: /users/1
-    method: GET
-    delay: 5
-    response:
-      status_code: 200
-      body: { id: 1, name: "Alice" }
-  - path: /users/2
-    method: GET
-    response:
-      status_code: 400
-      body: {error: "Some error"}
+domains:
+  - name: cats
+    endpoints:
+      - path: /
+        method: GET
+        response:
+          status_code: 200
+          body: {cats:[{name:"sabrina"},{name:"salem"}]}
+  - name: users
+    endpoints:
+      - path: /
+        method: GET
+        response:
+          status_code: 200
+          body:
+            users: [{ id: 1, name: "Alice" }]
+      - path: /1
+        method: GET
+        delay: 5
+        response:
+          status_code: 200
+          body: { id: 1, name: "Alice" }
+      - path: /2
+        method: GET
+        response:
+          status_code: 400
+          body: {error: "Some error"}
 app:
   cors:
     origins: ["http://localhost","http://localhost:8080"]
