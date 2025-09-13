@@ -4,6 +4,7 @@ domains:
       - path: /
         method: GET
         response:
+          type: json
           status_code: 200
           body: {cats:[{name:"sabrina"},{name:"salem"}]}
   - name: users
@@ -11,6 +12,7 @@ domains:
       - path: /
         method: GET
         response:
+          type: json
           status_code: 200
           body:
             users: [{ id: 1, name: "Alice" }]
@@ -18,6 +20,7 @@ domains:
         method: GET
         delay: 5
         response:
+          type: json
           status_code: 200
           body: { id: 1, name: "Alice" }
       - path: /2
